@@ -101,7 +101,19 @@ const parseAlter = query => {
     throw new Error('Not implemented, plz implement')
 }
 
-console.log(parseSelect(`
+const parseInputQuery = query => {
+    query = query.trim()
+    const queryType = getQueryType(query)
+    switch(queryType) {
+        case queryTypes.select: return parseSelect(query)
+        case queryTypes.insert: return parseInsert(query)
+        case queryTypes.delete: return parseDelete(query)
+        case queryTypes.alter: return parseAlter(query)
+        default: throw Error('Unknown query, SOS!')
+    }
+}
+
+console.log(parseInputQuery(`
 VALKKAA NIINKU VITTU etunimi
 TOST velkalistast
 TIETSÄ MISS sukunimi ON VÄHÄ NIINKU Â´joki%Â´
