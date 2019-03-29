@@ -42,35 +42,35 @@ const getQueryType = query => {
 }
 
 const parseSelect = query => {
-    // const splitQuery = query.match(/(VALKKAA (NIINKU (VITTU)?)?) (.+)\s*TOST (.+)/i)
     const [,select,,,selectParams] = query.match(/(VALKKAA (NIINKU)? (VITTU)? (.+)\s*)TOST/)
-    query = query.replace(select).trim()
-    const [, from, fromParams] = query.match(/(TOST (.+))\s+/)
-    query = query.replace(from).trim()
+    query = query.replace(select, '').trim()
+
+    const [, from, fromParams] = query.match(/(TOST (.+))\s*/)
+    query = query.replace(from, '').trim()
     if (query.length === 0) return 'lol'
 
     const optionals = {}
-    let optionalPart = query.match(/(TIETSÄ MISS (.+))\s+/)
+    let optionalPart = query.match(/(TIETSÄ MISS (.+))\s*/)
     if(optionalPart != null) {
         // Note: might have multiple conditions
         optionals.where = {
             full: optionalPart[1],
             params: optionalPart[2]
         }
-        query = query.replace(optionals.where)
+        query = query.replace(optionals.where, '')
     }
 
-    optionalPart = query.match(/(MUT VAA (.+))\s+/)
+    optionalPart = query.match(/(MUT VAA (.+))\s*/)
     if (optionalPart != null) {
         // Note: might have multiple conditions
         optionals.limit = {
             full: optionalPart[1],
             params: optionalPart[2]
         }
-        query = query.replace(optionals.limit)
+        query = query.replace(optionals.limit, '')
     }
 
-    optionalPart = query.match(/(JA NIINK(O|U) JÄRJESTYKSES .+)\s+/)
+    optionalPart = query.match(/(JA NIINK(O|U) JÄRJESTYKSES .+)\s*/)
     
     return {
         select: {
